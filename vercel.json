@@ -2,16 +2,16 @@
   "version": 2,
   "functions": {
     "Admin-dashboard/**/*.php": {
-      "runtime": "php@8.1"
+      "runtime": "vercel-php@0.6.0"
     },
     "Applicant-dashboard/**/*.php": {
-      "runtime": "php@8.1"
+      "runtime": "vercel-php@0.6.0"
     },
     "Staff-dashboard/**/*.php": {
-      "runtime": "php@8.1"
+      "runtime": "vercel-php@0.6.0"
     },
     "**/*.php": {
-      "runtime": "php@8.1"
+      "runtime": "vercel-php@0.6.0"
     }
   },
   "rewrites": [
