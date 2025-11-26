@@ -22,43 +22,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error_message = "Please enter both email and password.";
     } else {
-        $stmt = $conn->prepare("SELECT id, name, password, role, is_approved FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        try {
+            $stmt = $conn->prepare("SELECT id, name, password, role, is_approved FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
 
-        if ($user = $result->fetch_assoc()) {
-            if (password_verify($password, $user['password'])) {
-                // Check if the user is an applicant (role = 'user')
-                if ($user['role'] === 'user') {
-                    // Check if user is approved
-                    $is_approved = (int)$user['is_approved'];
-                    
-                    if ($is_approved === 0) {
-                        $error_message = "Your account is pending admin approval. Please wait for approval before logging in.";
-                    } elseif ($is_approved === 1) {
-                        // Regenerate session ID to prevent session fixation attacks
-                        session_regenerate_id(true);
-                        
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_name'] = $user['name'];
-                        $_SESSION['role'] = $user['role'];
-                        
-                        header("Location: home.php");
-                        exit;
+            if ($user) {
+                if (password_verify($password, $user['password'])) {
+                    // Check if the user is an applicant (role = 'user')
+                    if ($user['role'] === 'user') {
+                        // Check if user is approved
+                        $is_approved = (int)$user['is_approved'];
+
+                        if ($is_approved === 0) {
+                            $error_message = "Your account is pending admin approval. Please wait for approval before logging in.";
+                        } elseif ($is_approved === 1) {
+                            // Regenerate session ID to prevent session fixation attacks
+                            session_regenerate_id(true);
+
+                            $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['user_name'] = $user['name'];
+                            $_SESSION['role'] = $user['role'];
+
+                            header("Location: home.php");
+                            exit;
+                        } else {
+                            $error_message = "Your account has been rejected. Please contact support for more information.";
+                        }
                     } else {
-                        $error_message = "Your account has been rejected. Please contact support for more information.";
+                        $error_message = "This login is for applicants only. Please use the appropriate login portal.";
                     }
                 } else {
-                    $error_message = "This login is for applicants only. Please use the appropriate login portal.";
+                    $error_message = "Invalid email or password.";
                 }
             } else {
                 $error_message = "Invalid email or password.";
             }
-        } else {
-            $error_message = "Invalid email or password.";
+        } catch(PDOException $e) {
+            $error_message = "Database error occurred. Please try again.";
+            error_log("Login database error: " . $e->getMessage());
         }
-        $stmt->close();
     }
 } else {
     // Check for success messages from registration or password reset
