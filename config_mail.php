@@ -11,7 +11,7 @@
 define('MAIL_SMTP_ENABLED', true);
 
 // --- Application URL ---
-define('APP_BASE_URL', 'http://onlinebizpermit.rf.gd');
+define('APP_BASE_URL', 'https://onlinebizpermit.vercel.app');
 
 // --- SMTP Debugging ---
 // 0 = off (recommended for production)
