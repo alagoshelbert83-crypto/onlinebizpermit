@@ -26,6 +26,18 @@
     {
       "source": "/staff/(.*)",
       "destination": "/Staff-dashboard/$1"
+    },
+    {
+      "source": "/Admin-dashboard/(.*)",
+      "destination": "/Admin-dashboard/$1"
+    },
+    {
+      "source": "/Applicant-dashboard/(.*)",
+      "destination": "/Applicant-dashboard/$1"
+    },
+    {
+      "source": "/Staff-dashboard/(.*)",
+      "destination": "/Staff-dashboard/$1"
     }
   ]
 }
