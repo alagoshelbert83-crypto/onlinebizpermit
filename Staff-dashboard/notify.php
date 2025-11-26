@@ -1,4 +1,10 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
+
+
+<?php
 session_start();
 require './db.php';
 require_once __DIR__ . '/../config_mail.php';

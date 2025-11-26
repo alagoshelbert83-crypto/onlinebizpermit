@@ -9,7 +9,8 @@ $faqs = [
             ['text' => 'How to apply for a business permit?', 'action' => 'apply_process'],
             ['text' => 'What documents do I need?', 'action' => 'required_documents'],
             ['text' => 'Check application status', 'action' => 'check_status'],
-            ['text' => 'Technical or payment issues?', 'action' => 'technical_support']
+            ['text' => 'Technical or payment issues?', 'action' => 'technical_support'],
+            ['text' => 'Talk to a person (Live Chat)', 'action' => 'live_chat_request']
         ]
     ],
     [
@@ -675,15 +676,14 @@ function getFaqByKeywords($keywords, $faqs) {
     foreach ($faqs as $faq) {
         $currentMatchCount = 0;
         foreach ($faq['keywords'] as $keyword) {
-            if (mb_strpos($lowerCaseInput, $keyword, 0, 'UTF-8') !== false) {
+            // Use strpos as mb_strpos might not be available on all hosts.
+            // Also check if keyword is not empty to prevent errors.
+            if (!empty($keyword) && strpos($lowerCaseInput, $keyword) !== false) {
                 $currentMatchCount++;
             }
         }
 
-        if ($currentMatchCount > 0 && $currentMatchCount > $maxMatchCount) {
-            $maxMatchCount = $currentMatchCount;
-            $bestMatch = $faq;
-        } elseif ($currentMatchCount > 0 && $currentMatchCount === $maxMatchCount && strlen($faq['answer']) > strlen($bestMatch['answer'])) {
+        if ($currentMatchCount > $maxMatchCount) {
             $maxMatchCount = $currentMatchCount;
             $bestMatch = $faq;
         }

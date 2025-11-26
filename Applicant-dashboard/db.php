@@ -1,26 +1,16 @@
 <?php
 /**
- * Database Connection for Applicant Dashboard
+ * Database Connection for Staff Dashboard
  */
 
-// --- Database Configuration: Heroku vs. Local ---
-// Vercel uses DATABASE_URL, Heroku might use CLEARDB_DATABASE_URL. We check both.
-$db_url = getenv('DATABASE_URL') ?: getenv('CLEARDB_DATABASE_URL');
+// --- Database Configuration for your Hosting Provider (e.g., InfinityFree) ---
+// IMPORTANT: Replace the placeholder values below with the actual credentials
+// you get from your hosting provider's control panel after creating the database.
 
-if ($db_url) {
-    // Production environment (Vercel/Heroku)
-    $url_parts = parse_url($db_url);
-    if (!defined('DB_HOST')) define('DB_HOST', $url_parts['host']);
-    if (!defined('DB_USER')) define('DB_USER', $url_parts['user']);
-    if (!defined('DB_PASS')) define('DB_PASS', $url_parts['pass']);
-    if (!defined('DB_NAME')) define('DB_NAME', ltrim($url_parts['path'], '/'));
-} else {
-    // Local development environment
-    if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
-    if (!defined('DB_USER')) define('DB_USER', 'root');
-    if (!defined('DB_PASS')) define('DB_PASS', '');
-    if (!defined('DB_NAME')) define('DB_NAME', 'onlinebizpermit');
-}
+define('DB_HOST', 'sql302.infinityfree.com'); // <-- Your MySQL Host from InfinityFree
+define('DB_USER', 'if0_40313162');      // <-- Your MySQL User from InfinityFree
+define('DB_PASS', '83870oEAzLrDVmd'); // <-- Your InfinityFree account password
+define('DB_NAME', 'if0_40313162_onlinebizpermit'); // <-- Your MySQL Database name from InfinityFree
 
 // --- Establish the Connection ---
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -28,7 +18,7 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 // --- Check for Connection Errors ---
 if ($conn->connect_error) {
     // Use a more generic error in production
-    $error_message = $db_url ? "Database connection failed." : "Database Connection Failed: " . $conn->connect_error;
+    $error_message = "Database connection failed.";
     die($error_message);
 }
 

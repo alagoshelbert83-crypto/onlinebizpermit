@@ -15,6 +15,16 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['staff', 'admi
     exit;
 }
 
+// --- Fetch current user's name for display ---
+$userName = 'Staff'; // Default name
+if (isset($_SESSION['user_id'])) {
+    $stmt = $conn->prepare("SELECT name FROM users WHERE id = ?");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $user = $stmt->get_result()->fetch_assoc();
+    $userName = $user['name'] ?? 'Staff';
+    $stmt->close();
+}
 // You can also include other common files here if needed, for example:
 // require_once __DIR__ . '/email_functions.php';
 

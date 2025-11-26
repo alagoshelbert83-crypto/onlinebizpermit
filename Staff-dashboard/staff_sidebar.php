@@ -21,7 +21,7 @@ if (isset($conn)) {
         </div>
         <a href="dashboard.php" class="btn-nav <?= ($current_page === 'dashboard') ? 'active' : '' ?>"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
         <a href="applicants.php" class="btn-nav <?= ($current_page === 'applicants') ? 'active' : '' ?>"><i class="fas fa-users"></i><span>Applicants</span></a>
-        <a href="live_chats.php" class="btn-nav <?= ($current_page === 'live_chats') ? 'active' : '' ?>"><i class="fas fa-headset"></i><span>Live Chats <?php if ($unread_chats_count > 0): ?><span class="notification-count"><?= $unread_chats_count ?></span><?php endif; ?></span></a>
+        <a href="staff_conversations.php" class="btn-nav <?= ($current_page === 'live_chats') ? 'active' : '' ?>"><i class="fas fa-headset"></i><span>Live Chats <?php if ($unread_chats_count > 0): ?><span class="notification-count"><?= $unread_chats_count ?></span><?php endif; ?></span></a>
         <a href="notifications.php" class="btn-nav <?= ($current_page === 'notifications') ? 'active' : '' ?>"><i class="fas fa-bell"></i><span>Notifications</span></a>
         <hr class="sidebar-divider">
         <a href="reports.php" class="btn-nav <?= ($current_page === 'reports') ? 'active' : '' ?>"><i class="fas fa-chart-bar"></i><span>Reports</span></a>

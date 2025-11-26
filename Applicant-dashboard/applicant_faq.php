@@ -142,24 +142,36 @@ document.addEventListener('DOMContentLoaded', function() {
             addMessage('bot', 'I am creating a live chat request for you now. Please wait a moment...');
             const typing = showTyping();
             
-            // Use API to create chat session
-            fetch('chatbot_api.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'action=create_live_chat'
-            })
-            .then(response => response.json())
-            .then(data => {
+            try {
+                // Use API to create chat session
+                const response = await fetch('chatbot_api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'action=create_live_chat'
+                });
+
+                const data = await response.json();
                 typing.remove();
+
                 if (data.success && data.chat_id) {
                     addMessage('bot', 'Chat request created! Redirecting you to the live chat room...');
                     setTimeout(() => {
-                        window.location.href = `live_chat.php?id=${data.chat_id}`;
+                        window.location.href = `applicant_conversation.php?id=${data.chat_id}`;
                     }, 1500);
                 } else {
-                    addMessage('bot', 'Sorry, I was unable to create a live chat session. Please try again or contact support directly.');
+                    // Display the specific error from the server if available
+                    const errorMessage = data.error || 'I was unable to create a live chat session. Please try again or contact support directly.';
+                    addMessage('bot', 'Sorry, ' + errorMessage);
+                    // Directly show the welcome menu instead of re-calling handleAction to avoid cascading errors
+                    await showWelcomeMessage();
                 }
-            });
+            } catch (error) {
+                typing.remove();
+                addMessage('bot', 'Sorry, something went wrong while trying to connect to live chat. Please check your connection and try again.');
+                console.error('Error creating live chat:', error);
+                // Directly show the welcome menu instead of re-calling handleAction
+                await showWelcomeMessage();
+            }
             return;
         }
 
@@ -182,22 +194,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Welcome
-    handleAction('welcome');
+    async function showWelcomeMessage() {
+        const typing = showTyping();
+        try {
+            const response = await fetch('chatbot_api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=welcome`
+            });
+            const data = await response.json();
+            typing.remove();
+            addMessage('bot', data.reply);
+            renderChoices(data.choices);
+        } catch (error) {
+            typing.remove();
+            addMessage('bot', 'Sorry, something went wrong. Please try again.');
+        }
+    }
 
     // Check if we need to auto-start a live chat
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('action') === 'start_chat') {
-        // Find the quick reply button for live chat and click it programmatically
-        const liveChatChoice = Array.from(document.querySelectorAll('.chip')).find(
-            btn => btn.dataset.action === 'live_chat_request'
-        );
-        if (liveChatChoice) {
-            liveChatChoice.click();
-        } else {
-            // Fallback if the button isn't rendered yet
-            handleAction('live_chat_request');
-        }
+        // Directly trigger the live chat creation process
+        handleAction('live_chat_request');
+    } else {
+        // Normal welcome
+        showWelcomeMessage();
     }
 
     chatForm.addEventListener('submit', async function(e) {

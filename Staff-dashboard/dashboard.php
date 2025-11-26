@@ -1,15 +1,6 @@
 <?php
 $current_page = 'dashboard';
 require_once './staff_header.php';
-
-$userId = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT name FROM users WHERE id = ?");
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$userName = $user['name'] ?? 'Staff';
-$stmt->close();
-
 // --- Fetch data for KPIs ---
 $kpi_sql = "SELECT
                 COUNT(*) as total_applications,

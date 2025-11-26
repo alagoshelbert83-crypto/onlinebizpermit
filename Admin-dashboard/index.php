@@ -138,18 +138,18 @@
     <!-- Left Section -->
     <div class="left">
       <h1>ONLINEBIZ PERMIT</h1>
-      <img src="illustration1.png" alt="Business Illustration">
+      <img src="logo.png" alt="Business Illustration">
       <p>
         Welcome to our platform that revolutionizes business permit applications 
         and monitoring for municipalities. Experience a new level of efficiency 
         and transparency in licensing procedures.
       </p>
-      <a href="Applicant-dashboard/login.php" class="btn">🚀 Get Started</a>
+      <a href="admin_login.php" class="btn">🚀 Get Started</a>
     </div>
     
     <!-- Right Section -->
     <div class="right">
-      <img src="illustration2.png" alt="Office Illustration">
+      <img src="office.png.png" alt="Office Illustration">
     </div>
   </div>
 </body>

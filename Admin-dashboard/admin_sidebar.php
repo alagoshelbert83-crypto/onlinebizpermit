@@ -2,7 +2,7 @@
 // This file centralizes the sidebar navigation for the admin dashboard.
 
 // Set a default if the current page isn't specified in the including file.
-$current_page = $current_page ?? 'dashboard';
+$current_page = $current_page ?? 'admin_Dashboard';
 
 // Fetch unread pending user count for the notification badge.
 $pending_users_count = 0;
@@ -19,16 +19,16 @@ if (isset($conn)) {
             <i class="fas fa-leaf"></i>
             <span>OnlineBizPermit</span>
         </div>
-        <a href="dashboard.php" class="btn-nav <?= ($current_page === 'dashboard') ? 'active' : '' ?>"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <a href="admin_dashboard.php" class="btn-nav <?= ($current_page === 'admin_dashboard') ? 'active' : '' ?>"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
         <a href="pending_users.php" class="btn-nav <?= ($current_page === 'pending_users') ? 'active' : '' ?>"><i class="fas fa-user-clock"></i><span>Pending Users <?php if ($pending_users_count > 0): ?><span class="notification-count"><?= $pending_users_count ?></span><?php endif; ?></span></a>
         <a href="user_management.php" class="btn-nav <?= ($current_page === 'user_management') ? 'active' : '' ?>"><i class="fas fa-users-cog"></i><span>User Management</span></a>
         <hr class="sidebar-divider">
-        <a href="feedback.php" class="btn-nav <?= ($current_page === 'feedback') ? 'active' : '' ?>"><i class="fas fa-comment-dots"></i><span>Feedback</span></a>
-        <a href="reports.php" class="btn-nav <?= ($current_page === 'reports') ? 'active' : '' ?>"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+        <a href="admin_feedback.php" class="btn-nav <?= ($current_page === 'feedback') ? 'active' : '' ?>"><i class="fas fa-comment-dots"></i><span>Feedback</span></a>
+        <a href="admin_reports.php" class="btn-nav <?= ($current_page === 'reports') ? 'active' : '' ?>"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
     </div>
     <div>
-        <a href="settings.php" class="btn-nav <?= ($current_page === 'settings') ? 'active' : '' ?>"><i class="fas fa-cog"></i><span>Settings</span></a>
-        <a href="./logout.php" class="btn-nav logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        <a href="admin_settings.php" class="btn-nav <?= ($current_page === 'settings') ? 'active' : '' ?>"><i class="fas fa-cog"></i><span>Settings</span></a>
+        <a href="admin_logout.php" class="btn-nav logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
     </div>
 </div>
 

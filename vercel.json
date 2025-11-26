@@ -1,19 +1,49 @@
 {
-    "version": 2,
-    "builds": [
+  "version": 2,
+  "functions": {
+    "**/*.php": {
+      "runtime": "php@8.1"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/admin/(.*)",
+      "destination": "/Admin-dashboard/$1"
+    },
+    {
+      "source": "/applicant/(.*)",
+      "destination": "/Applicant-dashboard/$1"
+    },
+    {
+      "source": "/staff/(.*)",
+      "destination": "/Staff-dashboard/$1"
+    },
+    {
+      "source": "/Admin-dashboard/(.*)",
+      "destination": "/Admin-dashboard/$1"
+    },
+    {
+      "source": "/Applicant-dashboard/(.*)",
+      "destination": "/Applicant-dashboard/$1"
+    },
+    {
+      "source": "/Staff-dashboard/(.*)",
+      "destination": "/Staff-dashboard/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
         {
-            "src": "api/**/*.php",
-            "use": "vercel-php@0.6.1"
+          "key": "X-Frame-Options",
+          "value": "DENY"
         },
         {
-            "src": "index.php",
-            "use": "vercel-php@0.6.1"
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/index.php"
-        }
-    ]
+      ]
+    }
+  ]
 }

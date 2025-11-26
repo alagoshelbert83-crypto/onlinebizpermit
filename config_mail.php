@@ -1,43 +1,38 @@
 <?php
 /**
- * PHPMailer Configuration for Gmail
+ * PHPMailer Configuration for Brevo (formerly Sendinblue)
  *
- * IMPORTANT: To use Gmail to send emails, you need to configure your Google Account:
- * 1. Enable 2-Step Verification for your Google Account.
- * 2. Create an "App Password" for this application.
- *    - Go to your Google Account -> Security -> 2-Step Verification -> App passwords.
- *    - Generate a new password for "Mail" on "Other (Custom name)".
- *    - Use the generated 16-character password in MAIL_SMTP_PASSWORD below.
- *
- * @link https://support.google.com/accounts/answer/185833
+ * Make sure you have:
+ * 1. Verified your sender email in Brevo (e.g., alagoshelbert83@gmail.com).
+ * 2. Generated an SMTP key in Brevo Dashboard → SMTP & API → SMTP → Generate New SMTP Key.
  */
 
 // --- Main Email Switch ---
-// Set to true to enable sending emails, false to disable.
-define('MAIL_SMTP_ENABLED', getenv('MAIL_SMTP_ENABLED') ?: true);
+define('MAIL_SMTP_ENABLED', true);
 
 // --- Application URL ---
-// The base URL of the application. IMPORTANT: For local development, use your computer's
-// local network IP address instead of 'localhost' so that links in emails are accessible
-// from other devices on your network (like your phone).
-// In production, this should be your actual domain name (e.g., 'https://www.onlinebizpermit.com').
-// On Heroku, this is set via an environment variable.
-define('APP_BASE_URL', getenv('APP_BASE_URL') ?: 'http://localhost/onlinebizpermit');
+define('APP_BASE_URL', 'http://onlinebizpermit.rf.gd');
 
 // --- SMTP Debugging ---
-// 0 = off (for production)
-// 2 = client and server messages (for debugging)
-define('MAIL_SMTP_DEBUG', getenv('MAIL_SMTP_DEBUG') ?: 0); // Default to 0 for production
+// 0 = off (recommended for production)
+// 2 = detailed debug info (use only for testing)
+define('MAIL_SMTP_DEBUG', 0);
 
-// --- SMTP Server Settings (example for Gmail) ---
-define('MAIL_SMTP_HOST', getenv('MAIL_SMTP_HOST') ?: 'smtp.gmail.com');
-define('MAIL_SMTP_PORT', getenv('MAIL_SMTP_PORT') ?: 587); // Use 587 for TLS, or 465 for SSL
-define('MAIL_SMTP_SECURE', getenv('MAIL_SMTP_SECURE') ?: 'tls'); // 'tls' or 'ssl'
+// --- Brevo SMTP Server Settings ---
+define('MAIL_SMTP_HOST', 'smtp-relay.brevo.com');
+define('MAIL_SMTP_PORT', 587);
+define('MAIL_SMTP_SECURE', 'tls');
 
 // --- SMTP Authentication ---
-define('MAIL_SMTP_USERNAME', getenv('MAIL_SMTP_USERNAME') ?: 'atdelacruz@catsu.edu.ph'); // <-- IMPORTANT: Replace with your full Gmail address
-define('MAIL_SMTP_PASSWORD', getenv('MAIL_SMTP_PASSWORD') ?: 'kmhd qeao jkij ylnt'); // <-- IMPORTANT: Replace with the 16-character App Password you generated
+define('MAIL_SMTP_AUTH', true);
+
+// IMPORTANT:
+// Use your Brevo **account login email** (the one you sign in with),
+// and your **SMTP key** from Brevo → SMTP & API.
+define('MAIL_SMTP_USERNAME', '9a9125001@smtp-brevo.com'); // example: helbert@onlinebizpermit.com
+define('MAIL_SMTP_PASSWORD', getenv('MAIL_SMTP_PASSWORD') ?: 'YOUR_SMTP_PASSWORD_HERE'); // Use environment variable for security
 
 // --- Sender Information ---
-define('MAIL_FROM_EMAIL', getenv('MAIL_FROM_EMAIL') ?: 'atdelacruz@catsu.edu.ph'); // Can be the same as username
-define('MAIL_FROM_NAME', getenv('MAIL_FROM_NAME') ?: 'OnlineBizPermit Support'); // The name recipients will see
+define('MAIL_FROM_EMAIL', 'alagoshelbert83@gmail.com'); // verified Brevo sender
+define('MAIL_FROM_NAME', 'OnlineBizPermit Support');
+?>

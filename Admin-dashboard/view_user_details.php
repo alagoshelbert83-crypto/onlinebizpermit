@@ -152,11 +152,6 @@ require_once __DIR__ . '/admin_sidebar.php';
                                         <span><?= htmlspecialchars($app['type_of_business']) ?></span>
                                     </div>
                                 </div>
-                                <div class="app-actions">
-                                    <a href="view_application.php?id=<?= $app['id'] ?>" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i> View Application
-                                    </a>
-                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>

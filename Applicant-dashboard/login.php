@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="auth-footer">
-                <p>Don't have an account? <a href="register.php">Sign Up here</a></p>
+                <p>Don't have an account? <a href="signup.php">Sign Up here</a></p>
                 <div class="divider">
                 
                 </div>

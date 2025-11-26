@@ -1,14 +1,10 @@
 <?php
-session_start();
-require './db.php';
-require_once './email_functions.php';
+$current_page = 'applicants'; // Keep 'applicants' active in the sidebar
+$page_title = 'View Application';
+require_once './staff_header.php'; // Handles session, DB, auth, and starts HTML
+require_once './email_functions.php'; // For any email functions needed
 
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'staff') {
-    header("Location: login.php");
-    exit;
-}
-
+// --- Main Logic ---
 $application = null;
 $message = '';
 $email_message = '';
@@ -85,52 +81,16 @@ $stmt->close();
 if (isset($_GET['status']) && $_GET['status'] === 'updated') {
     $message = '<div class="message success">LGU Form data updated successfully!</div>';
 }
-
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>View Application - OnlineBizPermit</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+<?php require_once './staff_sidebar.php'; // Include the shared sidebar ?>
   <style>
     :root {
-        --primary-color: #4a69bd;
-        --secondary-color: #3c4b64;
-        --bg-color: #f0f2f5;
         --card-bg-color: #ffffff;
-        --text-color: #343a40;
-        --text-secondary-color: #6c757d;
-        --border-color: #dee2e6;
         --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        --border-radius: 12px;
     }
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-color); }
-    .wrapper { display: flex; min-height: 100vh; }
-
-    /* Sidebar */
-    .sidebar { width: 80px; background: #232a3b; padding: 25px 10px; display: flex; flex-direction: column; justify-content: space-between; color: #d0d2d6; flex-shrink: 0; transition: width 0.3s ease; overflow-x: hidden; }
-    .sidebar:hover { width: 240px; }
-    .sidebar h2 { margin-bottom: 35px; position: relative; height: 24px; display: flex; align-items: center; }
-    .sidebar h2 span { font-size: 18px; font-weight: 700; letter-spacing: 1px; color: #fff; white-space: nowrap; opacity: 0; transition: opacity 0.2s ease 0.1s; margin-left: 52px; }
-    .sidebar h2::before { content: '\f1ad'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 24px; color: #fff; position: absolute; left: 50%; transform: translateX(-50%); transition: left 0.3s ease; }
-    .sidebar:hover h2 span { opacity: 1; }
-    .sidebar:hover h2::before { left: 28px; }
-    .btn-nav { display: flex; align-items: center; justify-content: center; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; text-decoration: none; background: transparent; color: #d0d2d6; font-weight: 600; transition: all 0.2s ease; }
-    .btn-nav i { min-width: 20px; text-align: center; font-size: 1.1em; flex-shrink: 0; }
-    .btn-nav span { white-space: nowrap; opacity: 0; max-width: 0; overflow: hidden; transition: opacity 0.1s ease, max-width 0.2s ease 0.1s, margin-left 0.2s ease 0.1s; }
-    .sidebar:hover .btn-nav { justify-content: flex-start; }
-    .sidebar:hover .btn-nav span { opacity: 1; max-width: 100px; margin-left: 12px; }
-    .btn-nav:hover { background: #3c4b64; color: #fff; }
-    .btn-nav.active { background: #4a69bd; color: #fff; }
-    .btn-nav.logout { margin-top: 20px; color: #e74c3c; }
-    .btn-nav.logout:hover { background: #e74c3c; color: #fff; }
 
     /* Main Content */
-    .main { flex: 1; padding: 30px; overflow-y: auto; }
+    .main { flex: 1; padding: 30px; overflow-y: auto; transition: margin-left 0.3s ease; }
     .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .main-header h1 { font-size: 28px; font-weight: 700; color: var(--secondary-color); }
 
@@ -138,7 +98,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'updated') {
 
     .tab-link { padding: 10px 20px; cursor: pointer; background: transparent; border: none; font-size: 1rem; font-weight: 600; color: var(--text-secondary-color); position: relative; }
     .tab-link.active { color: var(--primary-color); }
-    .tab-link.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--primary-color); }
+    .tab-link.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: var(--primary-color); border-radius: 3px 3px 0 0; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
@@ -185,25 +145,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'updated') {
     .message.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
 
   </style>
-</head>
-<body>
-  <div class="wrapper">
 
-    <div class="sidebar">
-        <div>
-            <h2><span>OnlineBiz Permit</span></h2>
-            <a href="dashboard.php" class="btn-nav"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-            <a href="applicants.php" class="btn-nav active"><i class="fas fa-users"></i><span>Applicants</span></a>
-            <a href="notifications.php" class="btn-nav"><i class="fas fa-bell"></i><span>Notifications</span></a>
-            <a href="reports.php" class="btn-nav"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
-            <a href="feedback.php" class="btn-nav"><i class="fas fa-comment-dots"></i><span>Feedback</span></a>
-            <a href="settings.php" class="btn-nav"><i class="fas fa-cog"></i><span>Settings</span></a>
-        </div>
-        <div>
-            <a href="./logout.php" class="btn-nav logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
-        </div>
-
-    </div>
     <div class="main">
         <div class="main-header">
 
@@ -486,7 +428,6 @@ if (isset($_GET['status']) && $_GET['status'] === 'updated') {
         </div>
 
     </div>
-  </div>
   <script>
     const tabs = document.querySelectorAll('.tab-link');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -568,5 +509,4 @@ if (isset($_GET['status']) && $_GET['status'] === 'updated') {
     });
   </script>
 
-</body>
-</html>
+<?php require_once './staff_footer.php'; ?>

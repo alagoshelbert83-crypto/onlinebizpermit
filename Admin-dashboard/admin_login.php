@@ -5,7 +5,7 @@ require_once 'db.php';
 // If user is already logged in, redirect them
 if (isset($_SESSION['user_id'])) {
     if (in_array($_SESSION['role'], ['admin', 'staff'])) {
-        header("Location: ./dashboard.php");
+        header("Location: ./admin_dashboard.php");
     } else {
         header("Location: ./admin_login.php");
     }
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (in_array($user['role'], ['admin', 'staff'])) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['role'] = $user['role'];
-                    header("Location: ./dashboard.php");
+                    header("Location: ./admin_dashboard.php");
                     exit;
                 } else {
                     $error_message = "You do not have permission to access this area.";

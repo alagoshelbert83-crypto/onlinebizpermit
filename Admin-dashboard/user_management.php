@@ -10,8 +10,8 @@ require_once __DIR__ . '/admin_header.php';
 if (file_exists(__DIR__ . '/../config_mail.php')) {
     require_once __DIR__ . '/../config_mail.php';
 }
-if (file_exists(__DIR__ . '/../Staff-dashboard/email_functions.php')) {
-    require_once __DIR__ . '/../Staff-dashboard/email_functions.php';
+if (file_exists(__DIR__ . '/../Admin-dashboard/email_functions.php')) {
+    require_once __DIR__ . '/../Admin-dashboard/email_functions.php';
 }
 
 // This page should be accessible only by admins

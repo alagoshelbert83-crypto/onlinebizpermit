@@ -1,8 +1,16 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
+<?php
 $current_page = 'applicants';
 require_once './staff_header.php'; // This already handles session, db, and auth
 require_once __DIR__ . '/../config_mail.php'; // Keep for mail config
 require_once './email_functions.php'; // Keep for mail functions
+// Recommended for production environments like InfinityFree
+// This will log errors to a file instead of displaying them to users.
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
 $flash_message = '';
 if (isset($_SESSION['flash_message'])) {
