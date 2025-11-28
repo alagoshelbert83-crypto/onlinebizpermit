@@ -2,7 +2,7 @@
 /**
  * Automated Renewal Reminder Script
  *
- * This script should be run automatically once per day (e.g., via a cron job or scheduled task).
+ * This script should be run automatically once per day (e.g., via Vercel Cron Jobs).
  * It finds business permits that are expiring soon and sends a reminder email to the applicant.
  */
 
@@ -25,25 +25,21 @@ echo "Starting renewal reminder process...\n";
 // - Are expiring within the next $reminder_days
 // - Have NOT had a reminder sent yet (renewal_notice_sent_at IS NULL)
 $sql = "
-    SELECT 
+    SELECT
         a.id, a.user_id, a.business_name, a.renewal_date,
         u.name as applicant_name, u.email as applicant_email
     FROM applications a
     JOIN users u ON a.user_id = u.id
-    WHERE 
+    WHERE
         a.status = 'complete'
         AND a.renewal_date IS NOT NULL
         AND a.renewal_notice_sent_at IS NULL
-        AND a.renewal_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL ? DAY)
+        AND a.renewal_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '$reminder_days days'
 ";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $reminder_days);
 $stmt->execute();
-$result = $stmt->get_result();
-
-$expiring_applications = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+$expiring_applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (count($expiring_applications) === 0) {
     echo "No expiring permits found that need a reminder. All done.\n";
@@ -62,12 +58,12 @@ foreach ($expiring_applications as $app) {
 
     try {
         // --- 3. Send Email Notification ---
-        $protocol = 'http'; // Assume http for cron, or configure if you use https
-        $host = 'localhost'; // Use your actual domain in production
-        $absolute_link = "{$protocol}://{$host}/onlinebizpermit/Applicant-dashboard/view_my_application.php?id={$application_id}";
+        $protocol = getenv('PROTOCOL') ?: 'https';
+        $host = getenv('HOST') ?: 'yourdomain.com';
+        $absolute_link = "{$protocol}://{$host}/Applicant-dashboard/view_my_application.php?id={$application_id}";
 
         $email_subject = "Action Required: Your Business Permit for '{$business_name_safe}' is Expiring Soon";
-        
+
         $email_body = "
         <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
             <div style='max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
@@ -88,9 +84,7 @@ foreach ($expiring_applications as $app) {
 
         // --- 4. Update Database to Mark as Sent ---
         $update_stmt = $conn->prepare("UPDATE applications SET renewal_notice_sent_at = NOW() WHERE id = ?");
-        $update_stmt->bind_param("i", $application_id);
-        $update_stmt->execute();
-        $update_stmt->close();
+        $update_stmt->execute([$application_id]);
 
         echo "  -> Reminder sent successfully for application #{$application_id}.\n";
 
@@ -102,6 +96,5 @@ foreach ($expiring_applications as $app) {
     }
 }
 
-$conn->close();
 echo "Renewal reminder process finished.\n";
 ?>

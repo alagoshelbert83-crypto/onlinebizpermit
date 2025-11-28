@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($result) {
                 // Registration successful - user is now pending approval
-                header("Location: login.php?status=pending");
+                header("Location: /login.php?status=pending");
                 exit;
             } else {
                 $error_message = "Registration failed. Please try again.";
@@ -72,6 +72,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="auth_style.css">
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+        import { getStorage } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPZY7B1BKzNrJRTulWFa0P0t28qlMDzig",
+            authDomain: "onlinebizpermit.firebaseapp.com",
+            projectId: "onlinebizpermit",
+            storageBucket: "onlinebizpermit.firebasestorage.app",
+            messagingSenderId: "37215767726",
+            appId: "1:37215767726:web:44e68cd75b2628b438b13f",
+            measurementId: "G-7RJHQKV7SC"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const analytics = getAnalytics(app);
+
+        // Make services available globally
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firebaseStorage = storage;
+    </script>
 </head>
 <body>
     <div class="auth-container">
@@ -92,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <form action="signup.php" method="POST" class="auth-form" id="registerForm">
+            <form action="/signup.php" method="POST" class="auth-form" id="registerForm">
                 <div class="form-group">
                     <label for="name">
                         <i class="fas fa-user"></i>
@@ -205,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="auth-footer">
-                <p>Already have an account? <a href="login.php">Sign in here</a></p>
+                <p>Already have an account? <a href="/login.php">Sign in here</a></p>
             </div>
         </div>
 
