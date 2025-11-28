@@ -23,11 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_message = "Please enter both email and password.";
     } else {
         $stmt = $conn->prepare("SELECT id, name, password, role FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user = $result->fetch_assoc()) {
+        if ($user) {
             if (password_verify($password, $user['password'])) {
                 // Check if the user is an admin or staff
                 if (in_array($user['role'], ['admin', 'staff'])) {

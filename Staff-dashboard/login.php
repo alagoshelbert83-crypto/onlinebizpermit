@@ -16,11 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         // Only allow staff or admin to log in through this form
         $stmt = $conn->prepare("SELECT id, name, password, role FROM users WHERE email=? AND (role = 'staff' OR role = 'admin') LIMIT 1");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user = $result->fetch_assoc()) {
+        if ($user) {
             if (password_verify($password, $user['password'])) {
                 // Regenerate session ID to prevent session fixation attacks
                 session_regenerate_id(true);

@@ -39,21 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Check if email already exists
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result->num_rows > 0) {
+        if ($user) {
             $error_message = "An account with this email already exists.";
         } else {
             // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
+
             // Insert new user with pending approval (is_approved = 0)
-            $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, phone, is_approved, created_at) VALUES (?, ?, ?, 'user', ?, 0, NOW())");
-            $stmt->bind_param("ssss", $name, $email, $hashed_password, $phone);
-            
-            if ($stmt->execute()) {
+            $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, phone, is_approved, created_at) VALUES (?, ?, ?, 'user', ?, 0, CURRENT_TIMESTAMP)");
+            $result = $stmt->execute([$name, $email, $hashed_password, $phone]);
+
+            if ($result) {
                 // Registration successful - user is now pending approval
                 header("Location: login.php?status=pending");
                 exit;
@@ -61,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error_message = "Registration failed. Please try again.";
             }
         }
-        $stmt->close();
     }
 }
 ?>
