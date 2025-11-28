@@ -62,6 +62,11 @@ const authenticateToken = (req, res, next) => {
 
 // Routes
 
+// Root route - redirect to applicant dashboard
+app.get('/', (req, res) => {
+  res.redirect('/Applicant-dashboard/index.php');
+});
+
 // Applicant Login endpoint
 app.post('/api/auth/login', async (req, res) => {
   try {
